@@ -1,0 +1,79 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        (request.auth.token.email == "arvchoudhary317@gmail.com" && request.auth.token.email_verified == true);
+    }
+
+    // Camera validation
+    function isValidCamera(data) {
+      return data.keys().hasAll(['id', 'name', 'status']) &&
+        data.id is string &&
+        data.name is string &&
+        data.status in ['online', 'offline', 'alert'];
+    }
+
+    // Weapon validation
+    function isValidWeapon(data) {
+      return data.keys().hasAll(['id', 'name', 'status']) &&
+        data.id is string &&
+        data.name is string &&
+        data.status in ['idle', 'armed', 'firing'];
+    }
+
+    // Door validation
+    function isValidDoor(data) {
+      return data.keys().hasAll(['id', 'name', 'status']) &&
+        data.id is string &&
+        data.name is string &&
+        data.status in ['locked', 'unlocked', 'breached'];
+    }
+
+    // Alarm validation
+    function isValidAlarm(data) {
+      return data.keys().hasAll(['active', 'level']) &&
+        data.active is bool &&
+        data.level in ['low', 'medium', 'high', 'critical'] &&
+        (!('lockdown' in data) || data.lockdown is bool);
+    }
+
+    // Sensor validation
+    function isValidSensor(data) {
+      return data.keys().hasAll(['id', 'name', 'triggered']) &&
+        data.id is string &&
+        data.name is string &&
+        data.triggered is bool;
+    }
+
+    match /cameras/{cameraId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() && isValidCamera(request.resource.data);
+    }
+
+    match /weapons/{weaponId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() && isValidWeapon(request.resource.data);
+    }
+
+    match /doors/{doorId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() && isValidDoor(request.resource.data);
+    }
+
+    match /sensors/{sensorId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() && isValidSensor(request.resource.data);
+    }
+
+    match /system/status {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() && isValidAlarm(request.resource.data);
+    }
+  }
+}

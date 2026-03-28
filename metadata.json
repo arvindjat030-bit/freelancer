@@ -1,0 +1,5 @@
+{
+  "name": "AI Defense Security System",
+  "description": "A comprehensive AI-powered security platform featuring CCTV monitoring, automated weaponry, sensor grids, and a digital twin assistant.",
+  "requestFramePermissions": ["camera"]
+}

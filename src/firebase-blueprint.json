@@ -1,0 +1,75 @@
+{
+  "entities": {
+    "Camera": {
+      "title": "CCTV Camera",
+      "description": "A security camera in the defense system.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "location": { "type": "string" },
+        "status": { "type": "string", "enum": ["online", "offline", "alert"] },
+        "imageUrl": { "type": "string" }
+      },
+      "required": ["id", "name", "status"]
+    },
+    "Weapon": {
+      "title": "Automated Weapon",
+      "description": "A defensive weapon system.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "status": { "type": "string", "enum": ["idle", "armed", "firing"] },
+        "ammo": { "type": "number" },
+        "imageUrl": { "type": "string" }
+      },
+      "required": ["id", "name", "status"]
+    },
+    "Door": {
+      "title": "Automatic Door",
+      "description": "A secure entry point.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "status": { "type": "string", "enum": ["locked", "unlocked", "breached"] },
+        "imageUrl": { "type": "string" }
+      },
+      "required": ["id", "name", "status"]
+    },
+    "Alarm": {
+      "title": "Alarm System",
+      "description": "Security alarm state.",
+      "type": "object",
+      "properties": {
+        "active": { "type": "boolean" },
+        "level": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "lastTriggered": { "type": "string", "format": "date-time" },
+        "lockdown": { "type": "boolean" }
+      },
+      "required": ["active", "level"]
+    },
+    "Sensor": {
+      "title": "Motion Sensor",
+      "description": "A sensor detecting movement.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "location": { "type": "string" },
+        "triggered": { "type": "boolean" },
+        "imageUrl": { "type": "string" }
+      },
+      "required": ["id", "name", "triggered"]
+    }
+  },
+  "firestore": {
+    "/cameras": { "schema": "Camera", "description": "List of security cameras" },
+    "/weapons": { "schema": "Weapon", "description": "List of automated weapons" },
+    "/doors": { "schema": "Door", "description": "List of secure doors" },
+    "/sensors": { "schema": "Sensor", "description": "List of motion sensors" },
+    "/system/status": { "schema": "Alarm", "description": "Global system status" }
+  }
+}
